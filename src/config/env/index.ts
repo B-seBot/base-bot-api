@@ -14,4 +14,7 @@ export const config: ConfigTypes = {
   PORT: envVariables.PORT,
   JWT_SECRET: envVariables.JWT_SECRET,
   MONGODB_URI: envVariables.MONGODB_URI,
+  YELLOWCARD_API_BASE_URL: envVariables.YELLOWCARD_API_BASE_URL,
+  YELLOWCARD_API_KEY: envVariables.YELLOWCARD_API_KEY,
+  YELLOWCARD_API_SECRET_KEY: envVariables.YELLOWCARD_API_SECRET_KEY,
 };
