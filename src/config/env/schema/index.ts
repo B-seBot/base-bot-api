@@ -8,4 +8,5 @@ export const schema = {
   YELLOWCARD_API_BASE_URL: Joi.string().required(),
   YELLOWCARD_API_KEY: Joi.string().required(),
   YELLOWCARD_API_SECRET_KEY: Joi.string().required(),
+  YELLOWCARD_PAYOUT_CHANNEL_ID: Joi.string().required(),
 };

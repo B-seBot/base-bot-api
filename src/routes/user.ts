@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createUser,
+  getUserProfileBySocialHandle,
   userValidationRules,
 } from "../controllers/user.controller";
 import { validate } from "../middlewares/requestValidator";
@@ -8,7 +9,9 @@ import { validate } from "../middlewares/requestValidator";
 const router = express.Router();
 
 // POST: Create new user
-router.post("/user", userValidationRules, validate, createUser);
+router.post("/register", userValidationRules, validate, createUser);
+
+router.get("/get-by-handle", getUserProfileBySocialHandle);
 
 /**
  * Endpoint /send

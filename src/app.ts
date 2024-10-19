@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import userRoutes from "./routes/user";
+import walletRoutes from "./routes/wallet";
+import paymentRoutes from "./routes/payment";
 
 const app = express();
 
@@ -9,7 +11,9 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-app.use("/api", userRoutes);
+app.use("/users", userRoutes);
+app.use("/wallets", walletRoutes);
+app.use("/payments", paymentRoutes);
 
 app.get("/test", (_req: Request, res: Response) => {
   return res.sendStatus(200);

@@ -5,4 +5,5 @@ export type ConfigTypes = {
   YELLOWCARD_API_BASE_URL: string;
   YELLOWCARD_API_KEY: string;
   YELLOWCARD_API_SECRET_KEY: string;
+  YELLOWCARD_PAYOUT_CHANNEL_ID: string;
 };

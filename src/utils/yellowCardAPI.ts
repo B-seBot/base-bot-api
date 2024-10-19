@@ -6,9 +6,10 @@ const {
   YELLOWCARD_API_BASE_URL,
   YELLOWCARD_API_KEY,
   YELLOWCARD_API_SECRET_KEY,
+  YELLOWCARD_PAYOUT_CHANNEL_ID,
 } = config;
 
-const YellowCardAPI = axios.create({
+const YellowCardAPIConfig = axios.create({
   baseURL: YELLOWCARD_API_BASE_URL,
   headers: {
     Accept: "application/json",
@@ -17,7 +18,7 @@ const YellowCardAPI = axios.create({
 });
 
 // pass the body through generateYCSignature before making request
-YellowCardAPI.interceptors.request.use(async (config) => {
+YellowCardAPIConfig.interceptors.request.use(async (config) => {
   const { url, method, data } = config;
   const { timestamp, authorization } = generateYCSignature({
     path: String(url),
@@ -66,5 +67,62 @@ const generateYCSignature = (payload: IGenerateYCSignature) => {
     authorization: `YcHmacV1 ${apiKey}:${signature}`,
   };
 };
+
+export interface ISendMoneyPayload {
+  channelId: string;
+  sequenceId: string;
+  amount: number;
+  reason: string;
+  sender: { [key: string]: string };
+  destination: { [key: string]: string };
+  forceAccept?: boolean;
+  customerType?: "retail" | "institution";
+}
+class YellowCardAPI {
+  static resolveBankAccount = async (
+    accountNumber: string,
+    networkId: string
+  ) => {
+    const url = "/business/details/bank";
+    const data = JSON.stringify({
+      accountNumber,
+      networkId,
+    });
+    const response = await YellowCardAPIConfig.post(url, data);
+
+    return response.data;
+  };
+
+  static getNetwork = async (bankCode: string) => {
+    const url = "/business/networks";
+    const response = await YellowCardAPIConfig.get(url, {
+      params: { country: "NG" },
+    });
+
+    const networks: any[] = response.data.networks;
+
+    return networks.find(
+      (network) =>
+        network.code === bankCode &&
+        network.channelIds.includes(YELLOWCARD_PAYOUT_CHANNEL_ID)
+    );
+  };
+
+  static getAllNetworks = async () => {
+    const url = "/business/networks";
+    const response = await YellowCardAPIConfig.get(url, {
+      params: { country: "NG" },
+    });
+
+    return response.data;
+  };
+
+  static sendMoney = async (data: ISendMoneyPayload) => {
+    const url = "/business/payments";
+    const response = await YellowCardAPIConfig.post(url, JSON.stringify(data));
+
+    return response.data;
+  };
+}
 
 export default YellowCardAPI;
